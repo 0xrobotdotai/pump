@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body,html {
+  background: #090b1a;
+}
+
+.textStroke {
+  -webkit-text-stroke: 1.5px black;
+}
+
+input, textarea {
+  font-family: var(--font-mono-lowercase);
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.shake {
+  animation: shakeAnimation 1s infinite ease-in-out;
+}
+
+@keyframes shakeAnimation {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  75% {
+    transform: translateY(-10px);
+  }
+}
