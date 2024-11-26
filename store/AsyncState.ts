@@ -1,11 +1,11 @@
-// @ts-nocheck
+import { BooleanState } from "@/lib/BooleanState";
 import { makeAutoObservable } from "mobx";
 import toast from "react-hot-toast";
 
 export class AsyncState<T extends (...args: any[]) => Promise<any>, U = Awaited<ReturnType<T>>> {
-  loading: boolean = false;
-  value?: U = null;
-  action: T;
+  loading: BooleanState = new BooleanState();
+  value?: U = null as any;
+  action: T = (() => Promise.resolve()) as T;
   autoAlert: boolean = true;
   context: any = undefined;
 
@@ -27,7 +27,7 @@ export class AsyncState<T extends (...args: any[]) => Promise<any>, U = Awaited<
     }
   }
   private setLoading(value: boolean): void {
-    this.loading = value;
+    this.loading.setValue(value);
   }
   private handleError(error: any): void {
     if (!this.autoAlert) {
@@ -42,9 +42,9 @@ export class AsyncState<T extends (...args: any[]) => Promise<any>, U = Awaited<
 
     const errorMessage = this.extractErrorMessage(error);
 
-    if (this.isUserRejectedError(errorMessage)) {
+    if (this.isUserRejectedError(errorMessage as string)) {
       toast.error("User rejected the transaction.");
-    } else if (this.isTransactionNotProcessedError(errorMessage)) {
+    } else if (this.isTransactionNotProcessedError(errorMessage as string)) {
       toast.success("The transaction was successful.");
     } else {
       toast.error(errorMessage || "Transaction failed.");
