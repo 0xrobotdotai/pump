@@ -89,10 +89,10 @@ const CoinInfo = observer(() => {
       <div className="flex-1 flex flex-col justify-between gap-4">
         <div className="flex gap-6 items-start">
           <CardMini title="Price">
-            <span className="text-white">{helper.number.formatNumber(detail?.price ?? 0, "0.00")} IOTX</span>
+            <span className="text-white">{helper.number.formatNumber(detail?.price || 0, "0.00000")} IOTX</span>
           </CardMini>
           <CardMini title="Market Cap">
-            <span className="text-white"> {Number(helper.number.formatNumber(detail?.marketCap ?? 0, "0.00")).toLocaleString()} IOTX</span>
+            <span className="text-white"> {Number(helper.number.formatNumber(detail?.marketCap || 0, "0.00")).toLocaleString()} IOTX</span>
           </CardMini>
         </div>
         <div className="flex flex-col md:flex-row md:items-center gap-4">

@@ -159,7 +159,7 @@ const MarketTable: React.FC<{
           Prev
         </Button>
         <div className="flex-1 text-center text-sm font-semibold">Page: {market.currentPage}</div>
-        <Button onClick={handleNext} size="sm" color="primary" isDisabled={market.currentPage * market.itemsPerPage >= Number(market.getRobotPads.value?.totalToken) || market.getTokens.loading.value}>
+        <Button onClick={handleNext} size="sm" color="primary" isDisabled={market.currentPage * market.itemsPerPage >= Number(market.getRobotPads.value?.totalToken) || market.getTokens.loading.value || tokens.length < market.itemsPerPage}>
           Next
         </Button>
       </div>

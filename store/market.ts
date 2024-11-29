@@ -189,7 +189,7 @@ export class MarketStore {
           gql`
             query ($first: Int!, $skip: Int!, $orderBy: String, $orderDirection: String) {
               tokens(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, blocked: false, 
-              where:  {${isEmpyt ? "" : this.keyword.includes(`0x`) ? `id: "${this.keyword}",` : `symbol_gte: "${this.keyword}",`} ${this.listed ? `launchedAt_gte: "0"` : ""}
+              where:  {${isEmpyt ? "" : this.keyword.includes(`0x`) ? `id: "${this.keyword}",` : `symbol_starts_with_nocase: "${this.keyword}",`} ${this.listed ? `launchedAt_gte: "0"` : ""}
               }
             ) 
             {

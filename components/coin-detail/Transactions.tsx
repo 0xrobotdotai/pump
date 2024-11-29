@@ -50,7 +50,10 @@ const Transactions = observer(() => {
 
   return (
     <div className="py-10">
-      <div className="text-xl mb-4">Transactions</div>
+      <div className="flex items-center justify-between">
+        <div className="text-xl mb-4">Transactions</div>
+        <Icon icon="ic:outline-refresh" fontSize={20} className="text-primary cursor-pointer" onClick={() => transaction.fetchTransactionList.execute(params.mint as string)} />
+      </div>
       <Table aria-label="Example static collection table" color="primary">
         <TableHeader>
           <TableColumn>Date</TableColumn>
@@ -109,7 +112,7 @@ const Transactions = observer(() => {
           <Icon icon="fe:arrow-left" width="1.2rem" height="1.2rem" />
         </Button>
         <div className="text-center text-sm font-semibold">Page: {transaction.transactionPage}</div>
-        <Button isIconOnly onClick={handleNext} size="sm" color="primary">
+        <Button isIconOnly onClick={handleNext} size="sm" color="primary" isDisabled={(transaction.fetchTransactionList.value?.length || 0) < transaction.transactionLimit || transaction.fetchTransactionList.loading.value}>
           <Icon icon="fe:arrow-right" width="1.2rem" height="1.2rem" />
         </Button>
       </div>
