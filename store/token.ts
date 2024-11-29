@@ -463,7 +463,7 @@ export class TokenStore {
         });
         if (receipt.status === "success") {
           this.resetEthAndTokenInput();
-          Promise.all([this.fetchTokenDetail.execute(this.detail.id), rootStore.wallet.getBalance.execute(), this.getTokenBalanceWeb3.execute(this.detail.id)]);
+          Promise.all([this.fetchTokenDetail.execute(this.detail.id), rootStore.wallet.getBalance.execute(), this.getTokenBalanceWeb3.execute(this.detail.id), rootStore.transaction.fetchTransactionList.execute(this.detail.id)]);
         }
         return true;
       } else {
@@ -480,7 +480,7 @@ export class TokenStore {
         });
         if (receipt.status === "success") {
           this.resetEthAndTokenInput();
-          Promise.all([this.fetchTokenDetail.execute(this.detail.id), rootStore.wallet.getBalance.execute(), this.getTokenBalanceWeb3.execute(this.detail.id)]);
+          Promise.all([this.fetchTokenDetail.execute(this.detail.id), rootStore.wallet.getBalance.execute(), this.getTokenBalanceWeb3.execute(this.detail.id), rootStore.transaction.fetchTransactionList.execute(this.detail.id)]);
         }
         return true;
       }
