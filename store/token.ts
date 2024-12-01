@@ -405,7 +405,7 @@ export class TokenStore {
         ...this.RobotPadContract,
         functionName: "create",
         args: [name, symbol, rootStore.wallet.address, JSON.stringify(_projectInfo)],
-        value: this.buyAmount.value ? BigInt(this.buyAmount.value.toString()) : BigInt(0),
+        value: this.buyAmount.value ? BigInt(this.buyAmount.value.toFixed(0)) : BigInt(0),
       });
       const txid = await rootStore.wallet.walletClient.writeContract(data.request);
 

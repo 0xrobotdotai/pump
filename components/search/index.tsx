@@ -31,7 +31,7 @@ const SearchInput = observer(() => {
           inputWrapper: "w-[100%] md:w-[370px] max-w-[400px] mx-auto",
           input: "text-sm ml-1",
         }}
-        placeholder="Search token address or symbol..."
+        placeholder="Search token name or symbol..."
         labelPlacement="outside"
         startContent={<Icon icon="icon-park-twotone:search" width="1.2rem" height="1.2rem" />}
         type="search"
