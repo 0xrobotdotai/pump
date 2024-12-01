@@ -129,11 +129,12 @@ const CreateCoinContent = observer(() => {
           <Textarea
             label="Description"
             labelPlacement="outside"
-            placeholder="Write your description here"
+            placeholder="Write your description here(max 300 characters)"
             variant="bordered"
             classNames={{
               inputWrapper: "bg-background",
             }}
+            maxLength={300}
             value={token.createForm.description}
             onValueChange={(v) => token.setData({ createForm: { ...token.createForm, description: v } })}
           />

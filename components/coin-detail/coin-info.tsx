@@ -85,7 +85,7 @@ const CoinInfo = observer(() => {
 
   const OtherInfo = () => (
     <>
-      <div className="text-sm line-clamp-2">{detail?.description}</div>
+      <div className="text-sm ">{detail?.description}</div>
       <div className="flex-1 flex flex-col justify-between gap-4">
         <div className="flex gap-6 items-start">
           <CardMini title="Price">
