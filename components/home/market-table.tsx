@@ -66,7 +66,7 @@ const MarketTable: React.FC<{
           <div className="flex gap-4 items-center">
             <Checkbox
               size="sm"
-              checked={market.listed}
+              isSelected={market.listed}
               onValueChange={(v) => market.changeList(v)}
               classNames={{
                 base: "flex-none border-2 border-default rounded-xl mx-0",
