@@ -49,6 +49,8 @@ export const publicConfig = {
   chainId: 4689,
   ROBOT_PUMP_GRAPH_URL: 'https://graph.mainnet.iotex.io/subgraphs/name/robotpump/main',
   ROBOT_PUMP_GRAPH_URL_Test: 'https://graph.mainnet.iotex.io/subgraphs/name/robotpump/test',
+  ROBOT_PUMP_HASURA_URL: 'https://pump-hasuna-production.up.railway.app/v1/graphql',
+  ROBOT_PUMP_HASURA_REST_URL: 'https://pump-hasuna-production.up.railway.app/api/rest',
 }
 
 

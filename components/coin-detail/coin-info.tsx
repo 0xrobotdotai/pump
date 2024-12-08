@@ -129,8 +129,8 @@ const CoinInfo = observer(() => {
         <span className="text-white/60 text-xs">Disclaimer: Tokens listed on this platform are independent and not affiliated with RobotPump. Please DYOR.</span>
       </div>
       <div className="w-full flex flex-col lg:flex-row items-center justify-end gap-4 mb-4">
-        <div className="text-white/50 text-sm">{detail?.launchedAt ? `Congratulations, Listed on MimoSwap` : "When 80% of tokens are sold out, and market cap reach 385,714.28 IOTX,  anyone can launch token."}</div>
-        {detail?.launchedAt ? (
+        <div className="text-white/50 text-sm">{detail?.completed ? `Congratulations, Listed on MimoSwap` : "When 80% of tokens are sold out, and market cap reach 385,714.28 IOTX,  anyone can launch token."}</div>
+        {detail?.completed ? (
           <Button size="sm" as={Link} target="_blank" className="bg-[#acfe48] text-black" href={`https://mimo.exchange/swap?inputCurrency=IOTX&outputCurrency=${token?.detail?.id}`}>
             Go MimoSwap
           </Button>

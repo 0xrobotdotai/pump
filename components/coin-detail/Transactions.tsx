@@ -90,8 +90,8 @@ const Transactions = observer(() => {
                       <div className="text-sm w-max">{formatTimeAgo(item.timestamp)}</div>
                     </TableCell>
                     <TableCell>{item.type}</TableCell>
-                    <TableCell>{new BigNumber(item.tokenAmount).dividedBy(10 ** 18).toFixed(2)}</TableCell>
-                    <TableCell>{new BigNumber(item.iotxAmount).dividedBy(10 ** 18).toFixed(2)}</TableCell>
+                    <TableCell>{new BigNumber(item.tokenAmount).toFixed(2)}</TableCell>
+                    <TableCell>{new BigNumber(item.iotxAmount).toFixed(2)}</TableCell>
                     <TableCell>{Number(token?.detail?.price).toFixed(6)}</TableCell>
                     <TableCell>{helper.shortaddress(item.user || "...")}</TableCell>
                     <TableCell>

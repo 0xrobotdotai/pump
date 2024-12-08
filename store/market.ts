@@ -5,6 +5,8 @@ import { gql } from "graphql-request";
 import { AsyncState } from "./AsyncState";
 import { client } from "@/lib/subgraphClient";
 import { TOKEN } from "./types/token";
+import { hasuraClient } from "@/lib/hasuraClient";
+import { publicConfig } from "@/config/public";
 
 type SortOrder = "asc" | "desc";
 
@@ -98,7 +100,7 @@ export class MarketStore {
 
   changeList(v: boolean) {
     this.listed = v;
-    this.currentPage = 1
+    this.currentPage = 1;
     this.getTokens.execute();
   }
 
@@ -156,70 +158,64 @@ export class MarketStore {
   });
 
   getRobotPads = new AsyncState({
-    action:async () => {
-      const data: { robotPads: { totalToken: string; totalLaunched: string }[] } = await client.request(
-        gql`
-          query {
-            robotPads {
-              totalToken
-              totalLaunched
-            }
-          }
-        `
-      );
-
-      return data.robotPads?.[0];
+    action: async () => {
+      const data = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/robots-pads`).then(res => res.json())
+      return data.blockchains?.[0];
     },
   });
 
   getTokens = new AsyncState({
-    action:async () => {
+    action: async () => {
       try {
         this.loading = true;
-        let variables: any = {
-          first: this.itemsPerPage,
-          skip: (this.currentPage - 1) * this.itemsPerPage,
-          orderBy: this.sortBy,
-          orderDirection: this.sortOrder,
+        const isEmpyt = this.keyword == "";
+        const variables: any = {
+          limit: this.itemsPerPage,
+          offset: (this.currentPage - 1) * this.itemsPerPage,
         };
 
-        const isEmpyt = this.keyword == "";
-
-        const data: { tokens: TOKEN[] } = await client.request(
-          gql`
-            query ($first: Int!, $skip: Int!, $orderBy: String, $orderDirection: String) {
-              tokens(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, blocked: false, 
-              where:  {${isEmpyt ? "" : `or: [{name_starts_with_nocase: "${this.keyword}"}, {symbol_starts_with_nocase: "${this.keyword}"}],`} ${this.listed ? `launchedAt_gte: "0"` : ""}
+        const data: { tokens: TOKEN[] } = await hasuraClient.request(
+          gql`query($limit: Int, $offset: Int) {
+            tokens(limit: $limit, offset: $offset, order_by: {
+              ${this.sortBy === "createdAt" ? "created_at" : "market_cap"}: ${
+                this.sortOrder
               }
-            ) 
-            {
-                id
-                name
-                symbol
-                price
-                createdAt
-                completed
-                launchedTx
-                launchedAt
-                info
-                creator
-                marketCap
-              }
-            }
+            }, where: {
+              ${
+                isEmpyt
+                  ? ""
+                  : `_or: [{name: {_iregex: "${this.keyword}"}}, {symbol: {_iregex: "${this.keyword}"}}],`
+              }, 
+              ${this.listed ? `completed: {_eq: true}` : ""},
+              blocked: {_eq: false}
+            }) {
+              id:address
+              name
+              symbol
+              price
+              createdAt: created_at
+              completed
+              launchedTx: launched_tx
+              launchedAt: launched_at
+              info
+              creator
+              marketCap: market_cap
+            }          
+          }
           `,
           variables
         );
-
         this.tokens = data?.tokens?.map((token: TOKEN) => {
-          const data = this.fomatTokenInfo(token.info)
+          const data = this.fomatTokenInfo(token.info);
           return {
             ...token,
-            ...data
+            ...data,
           };
         });
 
         return this.tokens;
       } catch (error) {
+        console.error(error);
         return false;
       } finally {
         this.loading = false;
@@ -228,37 +224,15 @@ export class MarketStore {
   });
 
   getRandomToken = new AsyncState({
-    action:async () => {
+    action: async () => {
       try {
         this.loading = true;
-        const data: { tokens: TOKEN[] } = await client.request(
-          gql`
-            query ($first: Int!) {
-              tokens(first: $first, orderBy: createdAt, orderDirection: desc, blocked: false, where: {completed: false}) {
-                id
-                name
-                symbol
-                price
-                createdAt
-                completed
-                launchedTx
-                launchedAt
-                info
-                creator
-                marketCap
-              }
-            }
-          `,
-          {
-            first: 10,
-          }
-        );
-
+        const data = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/random-token`).then(res => res.json())
         const filterTokens = data?.tokens?.map((token: TOKEN) => {
-          const data = this.fomatTokenInfo(token.info)
+          const data = this.fomatTokenInfo(token.info);
           return {
             ...token,
-            ...data
+            ...data,
           };
         });
         return filterTokens[Math.floor(Math.random() * filterTokens.length)];
@@ -272,39 +246,16 @@ export class MarketStore {
 
   getMyToken = new AsyncState({
     value: [] as TOKEN[],
-    action:async (address: string) => {
+    action: async (address: string) => {
       try {
         this.loading = true;
-        const data: { tokens: TOKEN[] } = await client.request(
-          gql`
-            query ($creator: String!) {
-              tokens(where: { creator: $creator }, orderBy: createdAt, orderDirection: desc, blocked: false) {
-                id
-                name
-                symbol
-                price
-                createdAt
-                completed
-                launchedTx
-                launchedAt
-                info
-                creator
-                marketCap
-                blocked
-              }
-            }
-          `,
-          {
-            creator: address,
-          }
-        );
-
+        const data: {tokens: TOKEN[]} = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/my-token/${address}`).then(res => res.json())
         return (
           data?.tokens?.map((token: TOKEN) => {
-            const data = this.fomatTokenInfo(token.info)
+            const data = this.fomatTokenInfo(token.info);
             return {
               ...token,
-              ...data
+              ...data,
             };
           }) || []
         );
@@ -319,36 +270,38 @@ export class MarketStore {
   extractFilenameFromUrl(url: string) {
     const hashMatch = url.match(/ipfs\/([^?]+)/);
     const filenameMatch = url.match(/filename=([^&]+)/);
-  
+
     if (hashMatch && hashMatch[1] && filenameMatch && filenameMatch[1]) {
       const hash = hashMatch[1];
-      const extension = filenameMatch[1].split('.').pop();
-      return `${hash}.${extension === 'jpg' ? 'jpeg' : extension}`;
+      const extension = filenameMatch[1].split(".").pop();
+      return `${hash}.${extension === "jpg" ? "jpeg" : extension}`;
     } else {
       throw new Error("Invalid URL: Missing IPFS hash or filename");
     }
   }
-  
 
-
-  fomatTokenInfo (tokenInfo: string) {
+  fomatTokenInfo(tokenInfo: string) {
     const info = JSON.parse(tokenInfo);
-    let url = info?.image
+    let url = info?.image;
     const isWrongCdn = info.image?.includes("cdn.img2ipfs.com");
-    if(isWrongCdn) {
-      const urlName = this.extractFilenameFromUrl(info.image)
-      url = isWrongCdn ? `https://robotai-pump.mypinata.cloud/ipfs/QmaaMgXhTHFd4EA3R2DoVGrA4N7pT1VfjJtLcLY7z9BTUm/${urlName}` : info.image;
-    } 
-    
-    const isWrongipfs = info.image?.includes("i2.img2ipfs.com");
-    if(isWrongipfs) {
-      const urlName = this.extractFilenameFromUrl(info.image)
-      url = isWrongCdn ? `https://robotai-pump.mypinata.cloud/ipfs/QmaaMgXhTHFd4EA3R2DoVGrA4N7pT1VfjJtLcLY7z9BTUm/${urlName}` : info.image;
+    if (isWrongCdn) {
+      const urlName = this.extractFilenameFromUrl(info.image);
+      url = isWrongCdn
+        ? `https://robotai-pump.mypinata.cloud/ipfs/QmaaMgXhTHFd4EA3R2DoVGrA4N7pT1VfjJtLcLY7z9BTUm/${urlName}`
+        : info.image;
     }
-    
+
+    const isWrongipfs = info.image?.includes("i2.img2ipfs.com");
+    if (isWrongipfs) {
+      const urlName = this.extractFilenameFromUrl(info.image);
+      url = isWrongCdn
+        ? `https://robotai-pump.mypinata.cloud/ipfs/QmaaMgXhTHFd4EA3R2DoVGrA4N7pT1VfjJtLcLY7z9BTUm/${urlName}`
+        : info.image;
+    }
+
     return {
       ...info,
-      image: url
-    }
+      image: url,
+    };
   }
 }

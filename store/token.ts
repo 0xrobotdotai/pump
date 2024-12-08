@@ -7,7 +7,7 @@ import { FormatNumber } from "./FormatNumber";
 import pDebounce from "p-debounce";
 import _ from "lodash";
 import { InfoIcon, ChartIcon } from "@/components/icons";
-import { getContract } from "@/config/public";
+import { getContract, publicConfig } from "@/config/public";
 import { formatUnits, MaxUint256, parseEther } from "ethers";
 import { helper } from "@/lib/helper";
 import { TOKEN } from "./types/token";
@@ -150,29 +150,7 @@ export class TokenStore {
   fetchTokenDetail = new AsyncState({
     action:async (mint: string) => {
       try {
-        const data: { token: TOKEN } = await client.request(
-          gql`
-            query ($id: String!) {
-              token(id: $id) {
-                id
-                name
-                symbol
-                price
-                createdAt
-                completed
-                launchedTx
-                launchedAt
-                info
-                creator
-                completed
-                marketCap
-              }
-            }
-          `,
-          {
-            id: mint,
-          }
-        );
+        const data = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/tokendetail/${mint}`).then(res => res.json())
         const totalSupply = 1000000000000000000000000000;
         const sellTotal = 800000000000000000000000000;
         const [balanceOf] = await rootStore.wallet.publicClient.multicall({
@@ -188,9 +166,10 @@ export class TokenStore {
 
         const sellBlance = Number(balanceOf.result?.toString());
 
-        const formatRes = rootStore.market.fomatTokenInfo(data.token?.info);
+        const token = data.tokens[0];
+        const formatRes = rootStore.market.fomatTokenInfo(token?.info);
         this.detail = {
-          ...data.token,
+          ...token,
           ...formatRes,
           progress: Math.floor(((totalSupply - sellBlance) / sellTotal) * 100),
           balance: new FormatNumber({}),
@@ -331,7 +310,6 @@ export class TokenStore {
       toast.error("Please upload image");
       return false;
     }
-    console.log("description");
     return true;
   }
 

@@ -137,7 +137,7 @@ const MarketTable: React.FC<{
                       </div>
                       <div className="text-xs line-clamp-2 flex-1">{token.description}</div>
                       {
-                        token.launchedAt ? <div className="flex items-center gap-2 text-white text-sm">
+                        token.completed ? <div className="flex items-center gap-2 text-white text-sm">
                           <img src="/imgs/hj.svg" className="w-4 h-4" alt="" /> Listed on MimoSwap
                         </div> : <div className="justify-start items-start inline-flex text-sm leading-none">
                         Market Cap: <span className="text-white mx-1">{Number(helper.number.formatNumber(token?.marketCap || "0", "0.00")).toLocaleString()}</span> IOTX

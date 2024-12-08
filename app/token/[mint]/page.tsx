@@ -31,7 +31,7 @@ const CoinDetail: React.FC<{ params: { mint: string } }> = observer(({ params }:
 
   const Chart = () => (
     <>
-      {detail?.launchedAt ? (
+      {detail?.completed ? (
         <iframe height="1000px" width="100%" id="geckoterminal-embed" title="GeckoTerminal Embed" src={`https://www.geckoterminal.com/zh/iotx/pools/${detail?.id}?embed=1&info=0&swaps=1`} allow="clipboard-write"></iframe>
       ) : (
         <div className="w-full relative h-[500px]">
@@ -70,7 +70,7 @@ const CoinDetail: React.FC<{ params: { mint: string } }> = observer(({ params }:
             <div className="mb-2 text-xs text-white/50">Tips: Due to budget constraints, the RobotPump team is unable to provide a server, so the K-line chart for the token will not be available until it launches on mimo. </div>
             <Chart />
           </div>
-          {!detail?.launchedAt && <Transactions />}
+          {!detail?.completed && <Transactions />}
         </>
       )}
     </main>

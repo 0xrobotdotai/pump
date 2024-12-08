@@ -211,7 +211,7 @@ const BuySell = observer(() => {
             <>
               {token.detail?.completed ? (
                 <>
-                  {token.detail?.launchedAt ? (
+                  {token.detail?.completed ? (
                     <MButton target="_blank" color={"primary"} size="lg" className="w-full " as={Link} href={`https://mimo.exchange/swap?inputCurrency=IOTX&outputCurrency=${token?.detail?.id}`}>
                       Go MimoSwap
                     </MButton>

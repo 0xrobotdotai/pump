@@ -3,6 +3,7 @@ import { TRANSACTION } from "./types/token";
 import { client } from "@/lib/subgraphClient";
 import { gql } from "graphql-request";
 import { AsyncState } from "./AsyncState";
+import { hasuraClient } from "@/lib/hasuraClient";
 
 export class TransactionStore {
   tabKey: string = "buy";
@@ -32,46 +33,46 @@ export class TransactionStore {
 
     return this.transactionPage * this.transactionLimit < this.transactionTotal;
   }
-  
+
   fetchTransactionList = new AsyncState({
     value: [] as TRANSACTION[],
-    action:async (mint: String) => {
+    action: async (mint: String) => {
       try {
         let variables: any = {
-          first: this.transactionLimit,
-          skip: (this.transactionPage - 1) * this.transactionLimit,
-          orderBy: 'timestamp',
-          orderDirection: 'desc',
-          token: mint
+          limit: this.transactionLimit,
+          offset: (this.transactionPage - 1) * this.transactionLimit,
+          token: mint,
         };
-  
-        const data: { transactions: TRANSACTION[] } = await client.request(
-          gql`
-            query ($first: Int!, $skip: Int!, $orderBy: String, $orderDirection: String, $token: String) {
-              transactions(
-                first: $first
-                skip: $skip
-                where: {token: $token}
-                orderBy: timestamp
-                orderDirection: desc
-              ) {
-                id
-                iotxAmount
-                timestamp
-                type
-                user
-                tokenAmount
+        const data: { transactions: TRANSACTION[] } =
+          await hasuraClient.request(
+            gql`
+              query ($limit: Int!, $offset: Int!, $token: bpchar) {
+                transactions(
+                  limit: $limit
+                  offset: $offset
+                  where: { token: { _eq: $token } }
+                  order_by: { created_at: desc }
+                ) {
+                  id
+                  iotxAmount: iotx_amount
+                  timestamp: created_at
+                  type
+                  user
+                  tokenAmount: token_amount
+                }
               }
-            }
-          `,
-          variables
-        );
-  
-        return data.transactions;
+            `,
+            variables
+          );
+
+        return data.transactions?.map((item) => ({
+          ...item,
+          timestamp: new Date(item.timestamp).getTime() / 1000,
+        }));
       } catch (error) {
-        console.log('error', error)
+        console.error("error", error);
         return false;
       }
-    }
-  })
+    },
+  });
 }
