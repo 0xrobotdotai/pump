@@ -14,6 +14,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import EmptyResult from "../common/empty-result";
 import ImageFall from "../image-fallback";
 import { Checkbox } from "@nextui-org/checkbox";
+import { ROBOT_AI_CREATOR_ADDRESS } from "@/config/public";
 
 const MarketTable: React.FC<{
   tokens: TOKEN[];
@@ -125,11 +126,14 @@ const MarketTable: React.FC<{
                       <ImageFall src={token.image || ""} alt={token?.symbol} className="w-full h-full object-cover" />
                     </div>
                     <div className="h-full flex-col justify-start gap-3 items-start flex p-4 bg-[#151527] text-white/50">
-                      <div className="text-center text-xs leading-none">
-                        Created by:{" "}
+                      <div className="flex items-center text-center text-xs leading-none gap-2">
+                        <div>Created by:</div>
                         <Link href={`/profile/${token?.creator}`} className="underline pointer-events-auto">
                           {helper.shortaddress(token.creator)}
                         </Link>
+                        {
+                          token?.creator.toLowerCase() === ROBOT_AI_CREATOR_ADDRESS ? <img src="/imgs/robot-ai-logo.png" alt="" className="w-4 h-4"></img> : null
+                        }
                       </div>
                       <div className="flex flex-col gap-1 text-sm font-semibold line-clamp-1">
                         <div className="text-xs">{token?.name}</div>
