@@ -6,8 +6,7 @@ import clsx from "clsx";
 import { Toaster } from "react-hot-toast";
 import Providers from "./providers";
 import { Inter } from "next/font/google";
-import { LayoutProvider } from "@/components/layout-provider";
-
+import { LayoutProvider } from "@/components/layout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,8 +64,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen bg-background">
             <Navbar />
-            <div className="flex-1 pb-20 w-full lg:max-w-[1200px] px-4 lg:px-8 mx-auto">{children}</div>
-            <LayoutProvider />
+            {/* <div className={"flex-1 pb-20 w-full lg:max-w-[1200px] px-4 lg:px-8 mx-auto"}>{children}</div> */}
+            <LayoutProvider>{children}</LayoutProvider>
           </div>
         </Providers>
         <Toaster

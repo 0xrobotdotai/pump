@@ -27,4 +27,11 @@ export class GlobalStore {
   openHowItWorksModal(): void {
     this.isHowItWorksModalOpen = true;
   }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 }
