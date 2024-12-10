@@ -132,7 +132,7 @@ const MarketTable: React.FC<{
                           {helper.shortaddress(token.creator)}
                         </Link>
                         {
-                          token?.creator.toLowerCase() === ROBOT_AI_CREATOR_ADDRESS ? <img src="/imgs/robot-ai-logo.png" alt="" className="w-4 h-4"></img> : null
+                          token?.creator.toLowerCase() === ROBOT_AI_CREATOR_ADDRESS.toLowerCase() ? <img src="/imgs/robot-ai-logo.png" alt="" className="w-4 h-4"></img> : null
                         }
                       </div>
                       <div className="flex flex-col gap-1 text-sm font-semibold line-clamp-1">
