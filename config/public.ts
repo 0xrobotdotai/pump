@@ -51,4 +51,4 @@ export const publicConfig = {
   ROBOT_PUMP_GRAPH_URL_Test: 'https://graph.mainnet.iotex.io/subgraphs/name/robotpump/test',
 }
 
-export const ROBOT_AI_CREATOR_ADDRESS = "0xfddf5f61446bb9e2b1444c904942300145b862bf"
+export const ROBOT_AI_CREATOR_ADDRESS = "0xa14389E0D231E5B4Ca504DfbADC27EECBeff253B"
