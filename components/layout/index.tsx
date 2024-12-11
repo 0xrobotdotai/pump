@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { usePathname } from "next/navigation";
+import { useStore } from "@/store";
 
 const Layout = observer(({ children }: { children: React.ReactNode }) => {
   return (
@@ -23,6 +24,10 @@ export const FullScreenLayout = observer(
 export const LayoutProvider = observer(
   ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
+    const { global } = useStore()
+    useEffect(() => {
+      global.scrollToTop();
+    }, [])
     return (
       <>
         {pathname === "/" ? (

@@ -7,6 +7,7 @@ import { client } from "@/lib/subgraphClient";
 import { TOKEN } from "./types/token";
 import { hasuraClient } from "@/lib/hasuraClient";
 import { publicConfig } from "@/config/public";
+import { rootStore } from ".";
 
 type SortOrder = "asc" | "desc";
 
@@ -166,6 +167,9 @@ export class MarketStore {
 
   getTokens = new AsyncState({
     action: async () => {
+      if (window) {
+        rootStore.global.scrollToTop();
+      }
       try {
         this.loading = true;
         const isEmpyt = this.keyword == "";

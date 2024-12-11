@@ -26,7 +26,7 @@ const MarketTable: React.FC<{
 }> = observer(({ tokens }) => {
   const { market } = useStore();
   const { clearSearch } = market;
-  const [shakedIndexs, setShakedIndexs] = useState<number[]>([])
+  const [shakedIndexs, setShakedIndexs] = useState<number[]>([]);
 
   const handlePrevious = () => {
     if (market.currentPage > 1) {
@@ -46,23 +46,23 @@ const MarketTable: React.FC<{
   const getRandomInt = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
-  useEffect(() => {
-    if (tokens.length === 0) return
-    const timer = setInterval(() => {
-      if (market.getTokens.loading.value) {
-        setShakedIndexs([])
-        return
-      }
-      const count = getRandomInt(1, 10)
-      const shakedIndexs: number[] = [] 
-      Array.from({ length: count }, (_, i) => i + 1).forEach(item => {
-        const index = getRandomInt(0, tokens.length - 1)
-        shakedIndexs.push(index)
-      })
-      setShakedIndexs(shakedIndexs)
-    }, 1200)
-    return () => clearInterval(timer)
-  }, [tokens])
+  // useEffect(() => {
+  //   if (tokens.length === 0) return
+  //   const timer = setInterval(() => {
+  //     if (market.getTokens.loading.value) {
+  //       setShakedIndexs([])
+  //       return
+  //     }
+  //     const count = getRandomInt(1, 10)
+  //     const shakedIndexs: number[] = []
+  //     Array.from({ length: count }, (_, i) => i + 1).forEach(item => {
+  //       const index = getRandomInt(0, tokens.length - 1)
+  //       shakedIndexs.push(index)
+  //     })
+  //     setShakedIndexs(shakedIndexs)
+  //   }, 1200)
+  //   return () => clearInterval(timer)
+  // }, [tokens])
 
   return (
     <div className="flex flex-col w-full mt-6">
@@ -165,7 +165,9 @@ const MarketTable: React.FC<{
                   <Link
                     href={`/token/${token?.id}`}
                     className={`flex justify-start items-start flex-col cursor-pointer overflow-hidden rounded-xl border-1 border-transparent bg-[#151527] hover:border-primary ${
-                      shakedIndexs.includes(index) ? "animate-shakeWithPause" : ""
+                      shakedIndexs.includes(index)
+                        ? "animate-shakeWithPause"
+                        : ""
                     }`}
                     key={token.id}
                     onClick={clearSearch}
@@ -234,6 +236,21 @@ const MarketTable: React.FC<{
 
       <div className="flex justify-center my-6">
         <div className="flex items-center gap-2">
+          {market.currentPage > 1 ? (
+            <Button
+              onClick={() => {
+                market.setData({
+                  currentPage: 1,
+                });
+                market.getTokens.execute();
+              }}
+              size="sm"
+              color="primary"
+              isDisabled={market.getTokens.loading.value}
+            >
+              First
+            </Button>
+          ) : null}
           <Button
             onClick={handlePrevious}
             size="sm"
@@ -260,6 +277,31 @@ const MarketTable: React.FC<{
           >
             Next
           </Button>
+          {market.currentPage * market.itemsPerPage <
+          Number(market.getRobotPads.value?.totalToken) ? (
+            <Button
+              size="sm"
+              color="primary"
+              isDisabled={
+                market.currentPage ===
+                Math.ceil(
+                  Number(market.getRobotPads.value?.totalToken) /
+                    market.itemsPerPage
+                )
+              }
+              onClick={() => {
+                market.setData({
+                  currentPage: Math.ceil(
+                    Number(market.getRobotPads.value?.totalToken) /
+                      market.itemsPerPage
+                  ),
+                });
+                market.getTokens.execute();
+              }}
+            >
+              Last
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>
