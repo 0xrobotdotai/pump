@@ -23,7 +23,6 @@ export const FullScreenLayout = observer(
 export const LayoutProvider = observer(
   ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
-    console.log(pathname);
     return (
       <>
         {pathname === "/" ? (

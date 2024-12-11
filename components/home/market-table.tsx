@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/store";
 import { helper } from "@/lib/helper";
@@ -26,6 +26,7 @@ const MarketTable: React.FC<{
 }> = observer(({ tokens }) => {
   const { market } = useStore();
   const { clearSearch } = market;
+  const [shakedIndexs, setShakedIndexs] = useState<number[]>([])
 
   const handlePrevious = () => {
     if (market.currentPage > 1) {
@@ -42,6 +43,26 @@ const MarketTable: React.FC<{
     });
     market.getTokens.execute();
   };
+  const getRandomInt = (min: number, max: number): number => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  useEffect(() => {
+    if (tokens.length === 0) return
+    const timer = setInterval(() => {
+      if (market.getTokens.loading.value) {
+        setShakedIndexs([])
+        return
+      }
+      const count = getRandomInt(1, 10)
+      const shakedIndexs: number[] = [] 
+      Array.from({ length: count }, (_, i) => i + 1).forEach(item => {
+        const index = getRandomInt(0, tokens.length - 1)
+        shakedIndexs.push(index)
+      })
+      setShakedIndexs(shakedIndexs)
+    }, 1200)
+    return () => clearInterval(timer)
+  }, [tokens])
 
   return (
     <div className="flex flex-col w-full mt-6">
@@ -108,7 +129,7 @@ const MarketTable: React.FC<{
       </div>
 
       {market.getTokens.loading.value || market.loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-6 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-10 gap-6 md:gap-6">
           {Array.from({ length: market.itemsPerPage }, (_, i) => i + 1).map(
             (item) => {
               return (
@@ -138,23 +159,25 @@ const MarketTable: React.FC<{
       ) : (
         <>
           {tokens.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-6 md:gap-6">
-              {tokens.map((token: TOKEN) => {
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-10 gap-6 md:gap-6">
+              {tokens.map((token: TOKEN, index: number) => {
                 return (
                   <Link
                     href={`/token/${token?.id}`}
-                    className="flex justify-start items-start flex-col cursor-pointer overflow-hidden rounded-xl border-1 border-primary/50 bg-[#151527] hover:border-primary"
+                    className={`flex justify-start items-start flex-col cursor-pointer overflow-hidden rounded-xl border-1 border-transparent bg-[#151527] hover:border-primary ${
+                      shakedIndexs.includes(index) ? "animate-shakeWithPause" : ""
+                    }`}
                     key={token.id}
                     onClick={clearSearch}
                   >
-                    <div className="flex-none w-full h-[280px] md:h-[240px] bg-[#151527]/30">
+                    <div className="flex-none w-full h-[280px] md:h-[240px]">
                       <ImageFall
                         src={token.image || ""}
                         alt={token?.symbol}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="h-full flex-col justify-start gap-3 items-start flex p-4 bg-[#151527] text-white/50">
+                    <div className="h-full flex-col justify-start gap-3 items-start flex p-4 text-white/50">
                       <div className="flex items-center text-center text-xs leading-none gap-2">
                         <div>Created by:</div>
                         <Link

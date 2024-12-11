@@ -35,7 +35,7 @@ export class MarketStore {
   listed: boolean = false;
   animation: boolean = true;
 
-  itemsPerPage: number = 20;
+  itemsPerPage: number = 30;
   currentPage: number = 1;
 
   listType: ListType = "card";

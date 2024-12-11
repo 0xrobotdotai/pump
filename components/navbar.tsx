@@ -65,7 +65,7 @@ export const Navbar: React.FC = observer(() => {
         maxWidth="full"
         position="sticky"
         classNames={{
-          base: "px-4 lg:px-8 xl:px-[5%] pt-0 md:pt-3",
+          base: "px-4 lg:px-8 pt-0 md:pt-3",
           wrapper: "px-0"
         }}>
         <NavbarContent justify="start">
