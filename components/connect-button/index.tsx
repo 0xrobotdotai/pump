@@ -109,6 +109,9 @@ const SelectWallet = observer(({ type = "normal" }: SelectWalletProps) => {
                       <DropdownItem key="mining">
                         <Link href={`/mining`}>Mining</Link>
                       </DropdownItem>
+                      <DropdownItem key="ai-agent">
+                        <Link href={`https://link.medium.com/0uZWZPhKePb`} target="_blank">Ai Agent</Link>
+                      </DropdownItem>
                       <DropdownItem onClick={() => handleCopy(account.address)} key="copy">
                         Copy Address
                       </DropdownItem>

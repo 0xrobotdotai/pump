@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/store";
 import { helper } from "@/lib/helper";
@@ -63,7 +63,22 @@ const MarketTable: React.FC<{
   //   }, 1200)
   //   return () => clearInterval(timer)
   // }, [tokens])
-
+  const showLast = useMemo(() => {
+    if (market.listed || market.keyword) {
+      return false;
+    }
+    if (
+      market.currentPage * market.itemsPerPage <
+      Number(market.getRobotPads.value?.totalToken)
+    ) {
+      return true;
+    }
+    return false;
+  }, [
+    market.currentPage,
+    market.itemsPerPage,
+    market.getRobotPads.value?.totalToken,
+  ]);
   return (
     <div className="flex flex-col w-full mt-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -277,8 +292,7 @@ const MarketTable: React.FC<{
           >
             Next
           </Button>
-          {market.currentPage * market.itemsPerPage <
-          Number(market.getRobotPads.value?.totalToken) ? (
+          {showLast ? (
             <Button
               size="sm"
               color="primary"

@@ -32,6 +32,7 @@ export const Navbar: React.FC = observer(() => {
     { name: "Home", href: "/" },
     { name: "Create", href: "/create" },
     { name: "Mining", href: "/mining" },
+    { name: "Ai Agent", href: "https://link.medium.com/0uZWZPhKePb" },
     { name: "Get $ROBA", href: "https://mimo.exchange/swap?inputCurrency=IOTX&outputCurrency=0xe5f8dbf17c9ec8eb327d191dba74e36970877587" },
     { name: "Get $IOTX", href: "https://mimo.exchange/buy-iotx/crypto" },
   ];
