@@ -9,6 +9,7 @@ import { Button } from "@nextui-org/button";
 import { Avatar } from "@nextui-org/avatar";
 import { useParams } from "next/navigation";
 import ImageNextFall from "../image-fallback/ImageNextFall";
+import { ROBOT_AI_CREATOR_ADDRESS } from "@/config/public";
 
 const CoinInfo = observer(() => {
   const { token } = useStore();
@@ -20,6 +21,9 @@ const CoinInfo = observer(() => {
       <div className="flex md:items-center gap-1 lg:gap-4 text-md lg:text-2xl pt-2 text-white w-full md:w-2/3 line-clamp-2">
         {detail?.name || '...'}
         <span className="text-white/60">${detail?.symbol || '...'}</span>
+        {
+          detail?.creator.toLowerCase() === ROBOT_AI_CREATOR_ADDRESS.toLowerCase() ? <img src="/imgs/robot-ai-logo.png" alt="" className="w-4 h-4"></img> : null
+        }
       </div>
       <div className="flex items-center gap-3 md:gap-5 text-white">
         {detail?.telegram && (
