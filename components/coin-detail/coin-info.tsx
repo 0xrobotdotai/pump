@@ -233,7 +233,7 @@ const CoinInfo = observer(() => {
       <section className="w-full bg-white/5 p-4 rounded-lg hidden md:flex flex-row items-start gap-4">
         <ImageNextFall
           src={detail?.image || ""}
-          className="w-[100px] h-[100px] md:w-[170px] md:h-[170px] flex-none bg-[#151527] object-cover"
+          className="w-[100px] h-[100px] md:w-[170px] md:h-[170px] flex-none bg-[#151527] object-contain"
           alt={detail?.symbol}
         />
         <div className="flex-1 flex flex-col gap-3 text-white/65 text-sm">
@@ -246,7 +246,7 @@ const CoinInfo = observer(() => {
           <div className="flex-none">
             <ImageNextFall
               src={detail?.image || ""}
-              className="block w-[80px] h-[80px] flex-none bg-[#151527]  object-cover"
+              className="block w-[80px] h-[80px] flex-none bg-[#151527]  object-contain"
               alt={detail?.symbol}
             ></ImageNextFall>
           </div>

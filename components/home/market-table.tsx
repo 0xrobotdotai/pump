@@ -123,7 +123,7 @@ const MarketTable: React.FC<{
                 return (
                   <Link href={`/token/${token?.id}`} className="flex justify-start items-start flex-col cursor-pointer overflow-hidden rounded-xl border-1 border-primary/50 bg-[#151527] hover:border-primary" key={token.id} onClick={clearSearch}>
                     <div className="flex-none w-full h-[280px] md:h-[240px] bg-[#151527]/30">
-                      <ImageFall src={token.image || ""} alt={token?.symbol} className="w-full h-full object-cover" />
+                      <ImageFall src={token.image || ""} alt={token?.symbol} className="w-full h-full object-contain" />
                     </div>
                     <div className="h-full flex-col justify-start gap-3 items-start flex p-4 bg-[#151527] text-white/50">
                       <div className="flex items-center text-center text-xs leading-none gap-2">
