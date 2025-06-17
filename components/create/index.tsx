@@ -81,7 +81,7 @@ const CreateCoinContent = observer(() => {
         <section className="flex flex-col gap-6">
           <div>
             <section className="flex items-center gap-4">
-              <MInput
+              {/* <MInput
                 isReadOnly
                 label={"$ROBA Balance"}
                 labelPlacement="outside"
@@ -100,7 +100,7 @@ const CreateCoinContent = observer(() => {
                     </Button>
                   </div>
                 }
-              />
+              /> */}
               <MInput
                 isReadOnly
                 label={"$IOTX Balance"}
@@ -122,7 +122,7 @@ const CreateCoinContent = observer(() => {
                 }
               />
             </section>
-            <div className="text-xs text-primary/90 mt-2">Note: To create your token, you will need 10 $ROBA and a small amount $$IOTX as gas fees. Upon successful launch of your token, you will receive a reward of 200 $IOTX.</div>
+            <div className="text-xs text-primary/90 mt-2">Note: To create your token, you will need a small amount $$IOTX as gas fees. Upon successful launch of your token, you will receive a reward of 200 $IOTX.</div>
           </div>
           <MInput maxLength={50} minLength={3} value={token.createForm.name} onValueChange={(v) => token.setData({ createForm: { ...token.createForm, name: v } })} variant="bordered" placeholder="Enter Name" label="Name" labelPlacement="outside" />
           <MInput maxLength={50} value={token.createForm.symbol} onValueChange={(v) => token.setData({ createForm: { ...token.createForm, symbol: v } })} placeholder="Enter Symbol" label="Symbol" labelPlacement="outside" variant="bordered" />
@@ -161,21 +161,18 @@ const CreateCoinContent = observer(() => {
         </section>
         {isConnected ? (
           <>
-            {wallet.robaBalance.value.isGreaterThan(10) && wallet.balance.value.isGreaterThan(0) ? (
+            {wallet.balance.value.isGreaterThan(0) ? (
               <Button isDisabled={token.createCoinFun.loading.value} isLoading={token.createCoinFun.loading.value} color="primary" size="lg" className="w-full mt-6 font-semibold" onClick={() => token.createCoinFun.execute()}>
                 Create
               </Button>
             ) : (
               <Button
-                isDisabled={token.createCoinFun.loading.value}
-                target="_blank"
-                isLoading={token.createCoinFun.loading.value}
+                isDisabled={true}
                 color="primary"
                 size="lg"
                 className="w-full mt-6 font-semibold"
-                as={Link}
-                href="https://mimo.exchange/swap?inputCurrency=IOTX&outputCurrency=0xe5f8dbf17c9ec8eb327d191dba74e36970877587">
-                Insufficient Balance, Buy {wallet.robaBalance.value.isGreaterThan(0) ? "IOTX" : "ROBA"}
+                >
+                Insufficient Balance
               </Button>
             )}
           </>
@@ -184,9 +181,9 @@ const CreateCoinContent = observer(() => {
             Connect Wallet
           </Button>
         )}
-        <div className="mt-4 text-center text-sm font-semibold">
+        {/* <div className="mt-4 text-center text-sm font-semibold">
           COST TO DEPLOY ETS. <span className="text-primary">10 $ROBA</span>
-        </div>
+        </div> */}
       </div>
 
       <MModal size="lg" hideCloseButton={token.confirmClick.loading.value} isDismissable={false} title={`Create $${token.createForm?.symbol}`} isOpen={token.isOpenConfirmModal} onOpenChange={() => token.setData({ isOpenConfirmModal: !token.isOpenConfirmModal })}>

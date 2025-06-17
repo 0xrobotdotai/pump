@@ -397,7 +397,7 @@ export class TokenStore {
 
   createTokenAndBuy = new AsyncState({
     action:async () => {
-      await this.approveToken(this.RobotTokenContract.address, this.RobotPadContract.address, MaxUint256);
+      // await this.approveToken(this.RobotTokenContract.address, this.RobotPadContract.address, MaxUint256);
       const { name, symbol, description, image, twitter, telegram, website } = this.createForm;
       const _projectInfo = { description, image, name, symbol, twitter, telegram, website };
 
