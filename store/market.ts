@@ -160,6 +160,12 @@ export class MarketStore {
 
   getRobotPads = new AsyncState({
     action: async () => {
+      // Backend
+      // query blockchains {
+      //   blockchains {
+      //     totalToken: total_token
+      //   }
+      // }
       const data = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/robots-pads`).then(res => res.json())
       return data.blockchains?.[0];
     },
@@ -231,6 +237,21 @@ export class MarketStore {
     action: async () => {
       try {
         this.loading = true;
+        // Backend
+        // query tokens {
+        //   tokens {
+        //     id
+        //     name
+        //     symbol
+        //     price
+        //     createdAt: created_at
+        //     completed
+        //     launchedTx: launched_tx
+        //     launchedAt: launched_at
+        //     info
+        //     creator
+        //   }
+        // }
         const data = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/random-token`).then(res => res.json())
         const filterTokens = data?.tokens?.map((token: TOKEN) => {
           const data = this.fomatTokenInfo(token.info);
@@ -253,6 +274,21 @@ export class MarketStore {
     action: async (address: string) => {
       try {
         this.loading = true;
+        // Backend
+        // query myToken($address: bpchar) {
+        //   tokens(where: {creator: {_eq: $address}}) {
+        //     id
+        //     name
+        //     symbol
+        //     price
+        //     createdAt: created_at
+        //     completed
+        //     launchedTx: launched_tx
+        //     launchedAt: launched_at
+        //     info
+        //     creator
+        //   }
+        // }
         const data: {tokens: TOKEN[]} = await fetch(`${publicConfig.ROBOT_PUMP_HASURA_REST_URL}/my-token/${address}`).then(res => res.json())
         return (
           data?.tokens?.map((token: TOKEN) => {
