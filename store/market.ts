@@ -50,6 +50,12 @@ export class MarketStore {
     "0x543d3c8138213869725022e827781412f9851d63",
     "0xb203b3ca70d2f8db8fd73a7b5915d3eee2e43646",
     "0x9b0eeccfb0093ae60da6b67fe6e9bb1114458cae",
+    "0xd95b0b369e11db4220f39859bb9956d47c094091",
+    '0xde4a6515c0c9ce16d4c991d1d17ecaa4f1468ac7',
+    "0x578364cd0b2a7aa797f74f8013f074c556de2b2e",
+    "0xdcf3e78b6bbe39647920a97b64944920befc93e7",
+    "0x447de1d403370166c78b4e2693215b8cd2e8d62d",
+    "0x33925f745b8add17b4c2a0af7b28fabda2afb887",
   ];
 
   listType: ListType = "card";
